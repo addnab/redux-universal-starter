@@ -1,21 +1,21 @@
-const {resolve} = require('path')
+var path = require('path')
 
 module.exports = env => {
   return {
-    entry: './js/app.js',
+    entry: './app.js',
     output: {
       filename: 'bundle.js',
-      path: resolve(__dirname, 'dist'),
-      pathinfo: !env.prod,
+      path: path.resolve(__dirname, 'dist'),
+      pathinfo: !env.prod
     },
-    context: resolve(__dirname, 'src'),
+    context: path.resolve(__dirname, 'src'),
     devtool: env.prod ? 'source-map' : 'eval',
     bail: env.prod,
     module: {
       loaders: [
-        {test: /\.js$/, loader: 'babel!eslint', exclude: /node_modules/},
-        {test: /\.css$/, loader: 'style!css'},
-      ],
-    },
+        { test: /\.js$/, loader: 'babel', exclude: /node_modules/ },
+        { test: /\.css$/, loader: 'style!css' }
+      ]
+    }
   }
 }
