@@ -1,31 +1,27 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { Router, browserHistory } from 'react-router'
+import { syncHistoryWithStore } from 'react-router-redux'
 
-import reducers from './reducers'
+import routes from './routes'
+import { configureStore, DevTools } from './store'
 
-// Add the reducer to your store on the `routing` key
-const store = createStore(
-  combineReducers({
-    ...reducers,
-    routing: routerReducer
-  })
-)
-
-// Create an enhanced history that syncs navigation events with the store
+const store = configureStore(browserHistory, window.__initialState__)
 const history = syncHistoryWithStore(browserHistory, store)
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
-      <Route path='/' component={App}>
-        <Route path='foo' component={Foo} />
-        <Route path='bar' component={Bar} />
-      </Route>
-    </Router>
+    <Router routes={routes} history={history} />
   </Provider>,
-  document.getElementById('mount')
+  document.getElementById('root')
+)
+
+ReactDOM.render(
+  <Provider store={store}>
+    <DevTools />
+  </Provider>,
+  document.getElementById('devtools')
 )
